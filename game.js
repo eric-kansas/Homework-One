@@ -30,6 +30,9 @@ function Game(canvas, game, gridSizeW, gridSizeH) {
 	// Tile texture
 	this.tile = new Image();
 	this.tile.src = "img/tile.png";
+	
+	var building = new Image();
+	building.src = "img/icecream.png";
 
 	// Grid dimensions
 	this.grid = {
@@ -53,6 +56,11 @@ function Game(canvas, game, gridSizeW, gridSizeH) {
 		NORMAL: 1,
 		FAR: 0.50,
 		CLOSE: 2
+	}
+	
+	// Build helper
+	this.buildHelper = {
+		current: null
 	}
 
 	// Scroll position helper, keeps track of scrolling
@@ -175,7 +183,25 @@ Game.prototype.handleMouseDown = function(e) {
 
 	switch (Tools.current) {
 		case Tools.BUILD:
-		
+			var pos = this.translatePixelsToMatrix(e.clientX, e.clientY);
+			
+			// Can we place the element on the grid?
+			if (!this.checkIfTileIsBusy(this.buildHelper.current, pos.row, pos.col))
+			{
+				var obj = this.buildHelper.current;
+				var t = this;
+				for (var i = (pos.row + 1) - obj.tileWidth; i <= pos.row; i++) {
+					for (var j = (pos.col + 1) - obj.tileHeight; j <= pos.col; j++) {
+						t.tileMap[i] = (t.tileMap[i] == undefined) ? [] : t.tileMap[i];
+						t.tileMap[i][j] = (i === pos.row && j === pos.col) ? obj : new BuildingPortion(obj.buildingTypeId, i, j);
+					}
+				}
+			} else {
+				alert("An error ocurred while trying to purchase the building!")
+			}
+	
+			t.draw();
+				
 			break;
 		case Tools.MOVE:
 			this.dragHelper.active = true;
@@ -200,6 +226,18 @@ Game.prototype.handleMouseDown = function(e) {
 	}
     
     this.draw();
+}
+
+Game.prototype.checkIfTileIsBusy = function(obj, row, col) {
+	for (var i = (row + 1) - obj.tileWidth; i <= row; i++) {
+		for (var j = (col + 1) - obj.tileHeight; j <= col; j++) {
+			if (this.tileMap[i] != undefined && this.tileMap[i][j] != null) {
+				return true;
+			}
+		}
+	}	
+
+	return false;
 }
 
 Game.prototype.doResize = function() {
@@ -267,13 +305,22 @@ Game.prototype.draw = function(srcX, srcY, destX, destY) {
 			var ypos = (row + col) * (tileHeight / 2) + (this.grid.height * this.zoomHelper.level) + this.scrollPosition.y;
 
 			if (this.tileMap[row] != null && this.tileMap[row][col] != null) {
-			// Place building
+				// Place building
+				if (this.tileMap[row][col] instanceof Grass1 ||
+					this.tileMap[row][col] instanceof Grass2 ||
+					this.tileMap[row][col] instanceof Grass3){
+					ypos -= (this.tileMap[row][col].height * this.zoomHelper.level) - tileHeight;
+					xpos -= ((this.tileMap[row][col].width * this.zoomHelper.level) / 2) - (tileWidth / 2);
+
+					this.tileMap[row][col].sprite.setPosition(xpos, ypos);
+					this.tileMap[row][col].sprite.zoomLevel = this.zoomHelper.level;
+					this.tileMap[row][col].sprite.draw(this.c, false);
+				}
 			} else {
 				if (Math.round(xpos) + tileWidth >= srcX &&
 					Math.round(ypos) + tileHeight >= srcY &&
 					Math.round(xpos) <= destX &&
 					Math.round(ypos) <= destY) {
-					console.log("Here");
 					this.c.drawImage(this.tile, Math.round(xpos), Math.round(ypos), tileWidth, tileHeight);	
 
 				}

@@ -20,7 +20,10 @@
 		
 		<link rel="stylesheet" href="ui-style.css" />
 		<script src="utils/modernizr-1.7.min.js" charset="utf-8"></script>
+		
+		<script src="sprite.js" charset="utf-8"></script>
 		<script src="game.js" charset="utf-8"></script>
+		<script src="buildings.js" charset="utf-8"></script>
 		<script>
 
 			// Enums
@@ -46,8 +49,7 @@
 				ZOOM_OUT: 2,
 				DEMOLISH: 3,
 				SELECT: 4,
-				BUILD: 5,
-				ROTATE: 6
+				BUILD: 5
 			}
 
 			window.onload = function () {
@@ -56,7 +58,7 @@
 				var game = document.getElementById('game');
 
 				// Initialize the game object
-				var g = new Game(canvas, game, 500, 500);
+				var g = new Game(canvas, game, 10, 10);
 
 				var pointer = {
 					DOWN: 'mousedown',
@@ -90,6 +92,7 @@
 				// Listen for GUI events
 				var ui = document.getElementById('ui');
 				ui.addEventListener(pointer.UP, function(e) {
+					console.log("clicked one" + e.target.getAttribute('id'));
 					switch(e.target.getAttribute('id')) {
 						case 'panel-toggle':
 							var panelContainer = document.getElementById('panel-container');
@@ -102,6 +105,9 @@
 								panelContainer.setAttribute('class', 'hidden');
 								document.getElementById('panel-toggle').innerHTML = 'Build';
 							}
+							break;
+						case 'panel':
+							console.log("in panel");
 							break;
 						case 'select':
 							selectTool(Tools.SELECT, document.getElementById('select'));
@@ -116,7 +122,7 @@
 							selectTool(Tools.ZOOM_OUT, document.getElementById('zoomOut'));
 							break;
 						case 'rotate':
-							selectTool(Tools.ROTATE, document.getElementById('rotate'));
+							//selectTool(Tools.ROTATE, document.getElementById('rotate'));
 							g.rotateGrid();
 							g.draw();
 							break;
@@ -124,6 +130,26 @@
 							selectTool(Tools.DEMOLISH, document.getElementById('demolish'));
 							break;
 						default:
+							if ((e.target.tagName === 'LI' || e.target.parentNode.tagName === 'LI')) {
+								var t = (e.target.tagName === 'LI') ? e.target : e.target.parentNode;
+								var props = t.getAttribute("id");
+								console.log('props ' + props);
+								switch(props){
+									case 'building1':
+										var obj = new Grass1();
+										break;
+									case 'building2':
+										var obj = new Grass2();
+										break;
+									case 'building3':
+										var obj = new Grass3();
+										break;
+								}
+								g.buildHelper.current = obj;
+								Tools.current = Tools.BUILD;
+								break;
+							}
+						
 							// He didn't click on any option and actually click on an empty section of the UI, fallback to the canvas.
 							e.srcElement = canvas;
 							e.target = canvas;
@@ -163,6 +189,9 @@
 					case Tools.DEMOLISH:
 						Tools.current = Tools.DEMOLISH;
 						break;
+					case Tools.BUILD:
+						Tools.current = Tools.BUILD;
+						break;
 				}
 
 			}
@@ -191,7 +220,7 @@
 					<div id="panel">
 						<h3>Choose a building:</h3>
 						<ul id="buildings">
-							<li>
+							<li id="building1">
 								<h2>Building Name</h2>
 								<p>
 									Description
@@ -200,7 +229,7 @@
 								</p>
 							</li>
 
-							<li>
+							<li id="building2">
 								<h2>Building Name</h2>
 								<p>
 									Description
@@ -209,7 +238,7 @@
 								</p>
 							</li>
 
-							<li>
+							<li id="building3">
 								<h2>Building Name</h2>
 								<p>
 									Description
