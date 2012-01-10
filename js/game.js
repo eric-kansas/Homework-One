@@ -197,9 +197,10 @@ Game.prototype.handleMouseDown = function(e) {
 			} else {
 				alert("An error ocurred while trying to purchase the building!");
 			}
-	
-			t.draw();
-				
+			
+			if(t != null)
+				t.draw();
+					
 			break;
 		case Tools.MOVE:
 			this.dragHelper.active = true;
