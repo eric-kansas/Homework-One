@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+
+		<!-- We'll take care of the zoom ourselves -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+		<!-- iPhone icon + chromeless browser -->
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+
+		<!-- iPhone homescreen icon -->
+		<link rel="apple-touch-icon" href="img/touristResortIcon.png" /> 
+		<link rel="apple-touch-icon-precomposed" href="img/touristResortIcon.png"/>
+
+		<!-- Chrome Frame -->
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+
+		<title>Example 14 - Graphical User Interface</title>
+		
+		<link rel="stylesheet" href="ui-style.css" />
+		
+		<script type="text/javascript" src="utils/jquery.js" charset="utf-8"></script>
+		<script type="text/javascript" src="utils/mousewheel/jquery.mousewheel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="utils/modernizr-1.7.min.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="js/sprite.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/game.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/buildings.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/eventHandling.js" charset="utf-8"></script>
+    </head>
+    <body>
+    	<div id="game">
+
+			<canvas id="gameCanvas" width="1" height="1"></canvas>
+			<div id="ui">
+				<div id="top">
+					Account Balance: <span id="balance">0</span> Coins
+				</div>
+				<div id="tools">
+					<ul>
+						<li id="select" class="active"></li>
+						<li id="move"></li>
+						<li id="zoomIn"></li>
+						<li id="zoomOut"></li>
+						<li id="rotate"></li>
+						<li id="demolish"></li>
+					</ul>
+				</div>
+				<div id="panel-container" class="hidden">
+					<a href="javascript:void(0)" id="panel-toggle">Build</a>
+					<div id="panel">
+						<h3>Choose a building:</h3>
+						<ul id="buildings">
+							<li id="building1">
+								<h2>Red Grass</h2>
+								<p>
+									Wild red grass
+									<br />
+									<span>$0</span>
+								</p>
+							</li>
+
+							<li id="building2">
+								<h2>Yellow Grass</h2>
+								<p>
+									Wild yellow grass
+									<br />
+									<span>$0</span>
+								</p>
+							</li>
+
+							<li id="building3">
+								<h2>Brown Grass</h2>
+								<p>
+									Wild brown grass
+									<br />
+									<span>$0</span>
+								</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
+    </body>
+</html>
