@@ -90,14 +90,13 @@ window.onload = function () {
                         case 'panel-toggle':
                                 var panelContainer = document.getElementById('panel-container');
                                 var classes = panelContainer.getAttribute('class');
-
-                                if (classes != null && classes.length > 0) {
-                                        panelContainer.setAttribute('class', '');
-                                        document.getElementById('panel-toggle').innerHTML = 'Cancel';
-                                } else {
-                                        panelContainer.setAttribute('class', 'hidden');
-                                        document.getElementById('panel-toggle').innerHTML = 'Build';
-                                }
+				if (classes != null && classes.length > 0) {
+					$('#panel-container').removeClass();
+					$('#panel-toggle').text('Cancel');
+				} else {
+					$('#panel-container').addClass('hidden');
+					$('#panel-toggle').text('Build');
+				}
                                 break;
                         case 'panel':
                                 console.log("in panel");
